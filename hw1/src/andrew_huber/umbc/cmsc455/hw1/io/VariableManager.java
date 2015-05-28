@@ -11,13 +11,7 @@ public class VariableManager {
 		manager = new HashMap<String, Double>();
 	}
 	
-	public void addKeys(String... keys) {
-		for(String key : keys) {
-			manager.put(key, null);
-		}
-	}
-	
-	public void updateValue(String key, Double value) {
+	public void addValue(String key, Double value) {
 		if (manager.containsKey(key)) {
 			manager.remove(key);
 			manager.put(key, value);
