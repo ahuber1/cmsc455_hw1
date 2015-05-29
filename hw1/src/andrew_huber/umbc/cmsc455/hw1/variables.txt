@@ -3,3 +3,5 @@ A_fins=0.506e-3
 Cd_body=0.45
 Cd_fins=0.01
 dt=0.1
+g=9
+Rho=1.293

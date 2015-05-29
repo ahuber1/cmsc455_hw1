@@ -28,12 +28,17 @@ public class ThrustCurve {
 				step = timeInSeconds - previous;
 				
 				String stepString = Double.toString(step);
-				String[] tokens = stepString.split(".");
+				String[] tokens = stepString.split("\\.");
 				
 				precision = tokens[1].length();
 			}
-			else if(step != (timeInSeconds - previous))
-				throw new IllegalStateException("The thrust curve's time increments do not increment at a constant rate");
+			else {
+				double x = round(timeInSeconds - previous, precision); // gets rid of some arithmetic errors
+				double y = step - x;
+				
+				if(y != 0)
+					throw new IllegalStateException("The thrust curve's time increments do not increment at a constant rate");
+			}				
 		}
 		
 		previous = timeInSeconds;
@@ -41,13 +46,23 @@ public class ThrustCurve {
 	}
 	
 	public double thrustAt(double t) {
+		if(t < lowestSecond)
+			return curve.get(0);
+		else if(t > highestSecond)
+			return curve.get(curve.size() - 1);
+		else {
+			double tRounded = round(t, precision);
+			double iDouble = (tRounded - lowestSecond) / step;
+			int i = (int) iDouble;
+			
+			return curve.get(i);
+		}
+	}
+	
+	private double round(double val, int precision) {
 		String formatString = "%." + precision + "g%n";
-		String tString = String.format(formatString, t);
+		String tString = String.format(formatString, val);
 		
-		double tRounded = Double.parseDouble(tString);
-		double iDouble = (tRounded - lowestSecond) / step;
-		int i = (int) iDouble;
-		
-		return curve.get(i);
+		return Double.parseDouble(tString);
 	}
 }

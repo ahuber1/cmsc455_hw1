@@ -14,22 +14,9 @@ public class VariableManager<K, V> {
 	public void addValue(K key, V value) {
 		if (manager.containsKey(key)) {
 			manager.remove(key);
-			manager.put(key, value);
 		}
-		else {
-			StringBuilder builder = new StringBuilder();
-			builder.append(String.format("The key \"%s\" is not in this "
-					+ "VariableManager\n\n", key));
-			builder.append("The keys within this VariableManager are:\n\n");
-			
-			Set<K> keys = manager.keySet();
-			
-			for(K k : keys) {
-				builder.append(String.format("\t%s\n", k));
-			}
-			
-			throw new IllegalArgumentException(builder.toString());
-		}
+		
+		manager.put(key, value);
 	}
 	
 	public V getValue(K key) {

@@ -1,8 +1,11 @@
 package andrew_huber.umbc.cmsc455.hw1;
 
 import java.io.FileNotFoundException;
+import java.text.DecimalFormat;
 
-import andrew_huber.umbc.cmsc455.hw1.io.*;
+import andrew_huber.umbc.cmsc455.hw1.io.Reader;
+import andrew_huber.umbc.cmsc455.hw1.io.ThrustCurve;
+import andrew_huber.umbc.cmsc455.hw1.io.VariableManager;
 
 public class Main {
 	
@@ -22,7 +25,7 @@ public class Main {
 			runSimulation(manager, curve);
 		}
 		else {
-			System.err.println("This program requires two command line argument.");
+			System.err.println("This program requires two command line arguments.");
 			System.err.println("                                *********                                ");
 			System.err.println("The first argument must contain the filepath to a text file that contains");
 			System.err.println("the values of variables that will be used by this program.");
@@ -56,9 +59,41 @@ public class Main {
 		
 		int iterationCount = 0;
 		
-		while(s <= (350 - (350 * 0.3))) {
-			Fd_body	= Cd_body * Rho * A_body * Math.pow(v, 2) / 2;
-			Fd_fins = Cd_fins * Rho * A_fins * Math.pow(v, 2) / 2;
+		boolean runLoop = true;
+		
+		Object[] labels = {
+			"Iter",
+			"a",
+			"A_body",
+			"A_fins",
+			"Cd_body",
+			"Cd_fins",
+			"ds",
+			"dv",
+			"dt",
+			"F",
+			"Fg",
+			"Ft",
+			"Fd_body",
+			"Fd_fins",
+			"g",
+			"m",
+			"Rho",
+			"s",
+			"t",
+			"v"
+			
+		};
+		
+		System.out.printf("%8s\t%8s\t%8s\t%8s\t%8s\t%8s\t%8s\t%8s\t%8s\t%8s\t%8s\t%8s\t%8s\t%8s\t%8s\t%8s\t%8s\t%8s\t%8s\t%8s\n", labels);
+		
+		DecimalFormat format = new DecimalFormat("0.000");
+		
+		double tallestHeight = 0;
+		
+		while(runLoop) {
+			Fd_body	= (Cd_body * Rho * A_body * Math.pow(v, 2)) / 2;
+			Fd_fins = (Cd_fins * Rho * A_fins * Math.pow(v, 2)) / 2;
 			Fg 		= m * g;
 			Ft 		= curve.thrustAt(t);
 			F 		= Ft - (Fd_body + Fd_fins + Fg);
@@ -70,7 +105,37 @@ public class Main {
 			m 		= m - 0.0001644 * Ft;
 			t 		= t + dt;
 			
-			System.out.printf("%5d: %.3f m (height of rocket)\n", iterationCount, s);
+			Object[] formattedData = formatNumbers(format, a, A_body, A_fins, Cd_body, Cd_fins, ds, dv, dt, F, Fg, Ft, Fd_body, Fd_fins, g, m, Rho, s, t, v);
+			
+			System.out.printf("%8d\t", iterationCount);
+			
+			for(Object data : formattedData) {
+				System.out.print(String.format("%8s", data));
+				System.out.print("\t");
+			}
+			
+			System.out.println();
+			
+			if(s > tallestHeight) {	
+				tallestHeight = s;
+			}
+			
+			if(iterationCount > 0 && s < 0)
+				runLoop = false;
+			
+			iterationCount++;
 		}
+		System.out.println();
+		System.out.printf("The tallest the rocket went was %s meters off the ground", format.format(tallestHeight));
+	}
+	
+	private static Object[] formatNumbers(DecimalFormat format, Object... numbers) {
+		Object[] strings = new String[numbers.length];
+		
+		for(int i = 0; i < numbers.length; i++) {
+			strings[i] = format.format(numbers[i]);
+		}
+		
+		return strings;
 	}
 }

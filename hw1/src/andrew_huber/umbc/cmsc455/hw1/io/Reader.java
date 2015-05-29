@@ -16,7 +16,6 @@ public class Reader {
 			String[] tokens = line.split("=");
 			
 			if(tokens.length >= 2) {
-				tokens[0] = tokens[0].trim();
 				String[] tokens2 = tokens[1].split("#");
 				
 				try {
@@ -48,9 +47,7 @@ public class Reader {
 			String line = scan.nextLine();
 			String[] tokens = line.split(",");
 			
-			if(tokens.length >= 2) {
-				tokens[0] = tokens[0].trim();
-				
+			if(tokens.length >= 2) {				
 				try {
 					double k = Double.parseDouble(tokens[0].trim());
 					double v = Double.parseDouble(tokens[1].trim());
