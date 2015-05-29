@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Reader {
 	
-	public static VariableManager<String, Double> read(String filePath) throws FileNotFoundException {
+	public static VariableManager<String, Double> readVariables(String filePath) throws FileNotFoundException {
 		File file = new File(filePath);
 		Scanner scan = new Scanner(file);
 		VariableManager<String, Double> manager = new VariableManager<String, Double>();
@@ -15,7 +15,7 @@ public class Reader {
 			String line = scan.nextLine();
 			String[] tokens = line.split("=");
 			
-			if(tokens.length < 2) {
+			if(tokens.length >= 2) {
 				tokens[0] = tokens[0].trim();
 				String[] tokens2 = tokens[1].split("#");
 				
@@ -37,5 +37,33 @@ public class Reader {
 		
 		scan.close();
 		return manager;
+	}
+	
+	public static ThrustCurve readThrustCurve(String filePath) throws FileNotFoundException {
+		File file = new File(filePath);
+		Scanner scan = new Scanner(file);
+		ThrustCurve curve = new ThrustCurve();
+		
+		while(scan.hasNext()) {
+			String line = scan.nextLine();
+			String[] tokens = line.split(",");
+			
+			if(tokens.length >= 2) {
+				tokens[0] = tokens[0].trim();
+				
+				try {
+					double k = Double.parseDouble(tokens[0].trim());
+					double v = Double.parseDouble(tokens[1].trim());
+					curve.addValue(k, v);
+				} 
+				catch (NumberFormatException e) {
+					scan.close();
+					throw new NumberFormatException("There must be numbers on either side of the comma in the thrust curve file");
+				}
+			}
+		}
+		
+		scan.close();
+		return curve;
 	}
 }
