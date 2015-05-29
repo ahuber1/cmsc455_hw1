@@ -6,10 +6,10 @@ import java.util.Scanner;
 
 public class Reader {
 	
-	public static VariableManager read(String filePath) throws FileNotFoundException {
+	public static VariableManager<String, Double> read(String filePath) throws FileNotFoundException {
 		File file = new File(filePath);
 		Scanner scan = new Scanner(file);
-		VariableManager manager = new VariableManager();
+		VariableManager<String, Double> manager = new VariableManager<String, Double>();
 		
 		while(scan.hasNext()) {
 			String line = scan.nextLine();
@@ -17,10 +17,12 @@ public class Reader {
 			
 			if(tokens.length < 2) {
 				tokens[0] = tokens[0].trim();
-				tokens[1] = tokens[1].trim();
+				String[] tokens2 = tokens[1].split("#");
 				
 				try {
-					manager.addValue(tokens[0], Double.parseDouble(tokens[1]));
+					String k = tokens[0].trim();
+					double v = Double.parseDouble(tokens2[0].trim());
+					manager.addValue(k, v);
 				}
 				catch (NumberFormatException e) {
 					scan.close();

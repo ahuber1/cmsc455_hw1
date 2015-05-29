@@ -4,14 +4,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
-public class VariableManager {
-	private HashMap<String, Double> manager;
+public class VariableManager<K, V> {
+	private HashMap<K, V> manager;
 	
 	public VariableManager() {
-		manager = new HashMap<String, Double>();
+		manager = new HashMap<K, V>();
 	}
 	
-	public void addValue(String key, Double value) {
+	public void addValue(K key, V value) {
 		if (manager.containsKey(key)) {
 			manager.remove(key);
 			manager.put(key, value);
@@ -22,9 +22,9 @@ public class VariableManager {
 					+ "VariableManager\n\n", key));
 			builder.append("The keys within this VariableManager are:\n\n");
 			
-			Set<String> keys = manager.keySet();
+			Set<K> keys = manager.keySet();
 			
-			for(String k : keys) {
+			for(K k : keys) {
 				builder.append(String.format("\t%s\n", k));
 			}
 			
@@ -32,15 +32,20 @@ public class VariableManager {
 		}
 	}
 	
-	public Double getValue(String key) {
-		return manager.get(key);
+	public V getValue(K key) {
+		V val = manager.get(key);
+		
+		if(val != null)
+			return val;
+		else
+			throw new RuntimeException(String.format("Unable to find value \"%s\"", key));
 	}
 	
-	public Set<String> getKeys() {
+	public Set<K> getKeys() {
 		return manager.keySet();
 	}
 	
-	public Collection<Double> getValues() {
+	public Collection<V> getValues() {
 		return manager.values();
 	}
 }
