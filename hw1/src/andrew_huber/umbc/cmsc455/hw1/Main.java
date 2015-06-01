@@ -7,6 +7,11 @@ import andrew_huber.umbc.cmsc455.hw1.io.Reader;
 import andrew_huber.umbc.cmsc455.hw1.io.ThrustCurve;
 import andrew_huber.umbc.cmsc455.hw1.io.VariableManager;
 
+/**
+ * Contains the main methods that reads the text files and runs the simulation
+ * @author andrew_huber
+ *
+ */
 public class Main {
 	
 	/**
